@@ -155,6 +155,8 @@ function love.update(dt)
     function love.keyreleased(key)
         if Speed == 0 then
             HighScore = 0
+            Player1.y = 300
+            Player2.y = 300
             if key == "space" then
                Move = 1
                Speed = 300
