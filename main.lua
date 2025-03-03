@@ -49,7 +49,7 @@ function love.load()
         height = 20
     }
 
-    Speed = 300
+    Speed = 800
     HighScore=0
 end
 
@@ -159,7 +159,7 @@ function love.update(dt)
             Player2.y = 300
             if key == "space" then
                Move = 1
-               Speed = 300
+               Speed = 800
                RandomBall = math.random(-300, 300)
                Ball.y = Ball.y + RandomBall * dt
             end
@@ -167,21 +167,14 @@ function love.update(dt)
      end
         love.keyreleased(love.keyboard.isDown("space"))
 
- -- AI logic for Player 2
-  -- AI logic for Player 2 (smoother movement)
-  local ballCenterY = Ball.y + Ball.height / 2
-  local player2CenterY = Player2.y + Player2.height / 2
+        -- AI logic for Player 2 (smooth movement)
+    local ballCenterY = Ball.y + Ball.height / 2
+    local player2CenterY = Player2.y + Player2.height / 2
 
-  -- Smoothly interpolate Player 2's movement towards the ball
-  local lerpFactor = 0.05  -- This controls the smoothness (0 = instant, 1 = very slow)
-  if ballCenterY < player2CenterY then
-      Player2.y = Player2.y - lerpFactor * (Speed*15) * dt  -- Move up towards the ball
-  elseif ballCenterY > player2CenterY then
-      Player2.y = Player2.y + lerpFactor * (Speed*15) * dt  -- Move down towards the ball
-  end
-
+    -- Smoothly interpolate Player 2's movement towards the ball
+    local lerpFactor = 3  -- Controls the smoothness (lower value = smoother movement)
+    Player2.y = Player2.y + (ballCenterY - player2CenterY) * lerpFactor * dt
  
-
     -- Keep Player 2 within the top and bottom walls
     if Player2.y < WallTop.y + WallTop.height then
         Player2.y = WallTop.y + WallTop.height  -- Don't go above top wall
