@@ -4,9 +4,12 @@ end
 
 wall = require("wall")
 player = require("player")
+ball = require("ball")
 
 function love.load()
     wall.load()
+    player.load()
+    ball.load()
 
 
     math.randomseed(os.time())
@@ -31,7 +34,7 @@ function love.load()
         width = 20,
         height = 100
     }
-    player.load()
+    
 
     Speed = 800
     HighScore=0
