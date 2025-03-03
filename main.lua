@@ -2,28 +2,17 @@ if arg[2] == "debug" then
     require("lldebugger").start()
 end
 
+wall = require("wall")
+player = require("player")
+
 function love.load()
+    wall.load()
+
+
     math.randomseed(os.time())
     RandomBall = 0
     Move = 2
-    Player1 = {
-        x = 0,
-        y = 300,
-        width = 20,
-        height = 100
-    }
-    WallTop = {
-        x = 0,
-        y = 0,
-        width = 1000,
-        height = 10
-    }
-    WallBottom = {
-        x = 0,
-        y = 590,
-        width = 1000,
-        height = 10
-    }
+
     OutofBoundsLeft = {
         x = -10,
         y = 0,
@@ -42,34 +31,12 @@ function love.load()
         width = 20,
         height = 100
     }
-    Ball = {
-        x = 400,
-        y = 320,
-        width = 20,
-        height = 20
-    }
+    player.load()
 
     Speed = 800
     HighScore=0
 end
 
-function CheckCollisionBall1(player1, Ball)
-    local player1_left = player1.x
-    local player1_right = player1.x + player1.width
-    local player1_top = player1.y
-    local player1_bottom = player1.y + player1.height
-
-    local ball_top = Ball.y
-    local ball_bottom = Ball.y + Ball.height
-    local ball_left = Ball.x
-    local ball_right = Ball.x + Ball.width
-
-    return  ball_right > player1_left
-        and ball_left < player1_right
-        and ball_bottom > player1_top
-        and ball_top < player1_bottom
-
-end
 
 function CheckCollisionOutofBounds(OutofBoundsRight, OutofBoundsLeft, Ball)
     local wall_left = OutofBoundsLeft.x + OutofBoundsLeft.width
@@ -211,7 +178,7 @@ function love.update(dt)
         
         
     end
-    if CheckCollisionBall1(Player1, Ball) then
+    if player.CheckCollisionBall1(Player1, Ball) then
         Move = 1
         Speed=Speed+10
         HighScore=HighScore+1
@@ -228,7 +195,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    if CheckCollisionBall1(Player1, Ball) then
+    if player.CheckCollisionBall1(Player1, Ball) then
         --If there is collision, draw the rectangles filled
         Mode1 = "line"
     else
@@ -249,9 +216,8 @@ function love.draw()
     love.graphics.rectangle('fill', OutofBoundsLeft.x, OutofBoundsLeft.y, OutofBoundsLeft.width, OutofBoundsLeft.height)
     love.graphics.rectangle('fill', OutofBoundsRight.x, OutofBoundsRight.y, OutofBoundsRight.width, OutofBoundsRight.height)
     love.graphics.rectangle(Mode2, Player2.x, Player2.y, Player2.width, Player2.height)
-    love.graphics.rectangle("fill", WallTop.x, WallTop.y, WallTop.width, WallTop.height)
-    love.graphics.rectangle("fill", WallBottom.x, WallBottom.y, WallBottom.width, WallBottom.height)
     love.graphics.rectangle('fill', Ball.x, Ball.y, Ball.width, Ball.height)
+    wall.draw()
     
 end
 
