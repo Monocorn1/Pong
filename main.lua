@@ -5,39 +5,22 @@ end
 wall = require("wall")
 player = require("player")
 ball = require("ball")
+enemy = require("enemy")
+gameStateEnd = require("gameStateEnd")
 
 function love.load()
+    math.randomseed(os.time())
+
+    RandomBall = 0
+    Move = 2
+    Speed = 800
+    HighScore=0
+
     wall.load()
     player.load()
     ball.load()
-
-
-    math.randomseed(os.time())
-    RandomBall = 0
-    Move = 2
-
-    OutofBoundsLeft = {
-        x = -10,
-        y = 0,
-        width = 10,
-        height = 1000
-    }
-    OutofBoundsRight = {
-        x = 800,
-        y = 0,
-        width = 10,
-        height = 1000
-    }
-    Player2 = {
-        x = 780,
-        y = 300,
-        width = 20,
-        height = 100
-    }
-    
-
-    Speed = 800
-    HighScore=0
+    enemy.load()
+    gameStateEnd.load()
 end
 
 
