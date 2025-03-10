@@ -5,11 +5,13 @@ ball = require("ball")
 function player.load()
     ball.load()
     Player1 = {
-        x = 0,
+        x = 10,
         y = 300,
-        width = 20,
+        playerImg = love.graphics.newImage('Assets/Player.png'),
+        width = 10,
         height = 100
     }
+    Player1.playerImg:setFilter("nearest", "nearest")
 end
 
 --Check collision with Player and the ball

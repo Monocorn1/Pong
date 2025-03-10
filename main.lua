@@ -7,6 +7,17 @@ player = require("player")
 ball = require("ball")
 enemy = require("enemy")
 gameStateEnd = require("gameStateEnd")
+push = require("push")
+
+function love.resize(w, h)
+    push:resize(w, h)
+end
+
+gameWidth, gameHeight = 800, 600 --fixed game resolution
+windowWidth1, windowHeight1 = love.window.getDesktopDimensions()
+windowWidth, windowHeight = windowWidth1*.6, windowHeight1*.7 --make the window a bit smaller than the screen itself
+
+push:setupScreen(gameWidth, gameHeight, windowWidth, windowHeight, {fullscreen = false, stretched = true, resizable = true})
 
 function love.load()
     math.randomseed(os.time())
@@ -21,6 +32,7 @@ function love.load()
     ball.load()
     enemy.load()
     gameStateEnd.load()
+    love.graphics.setDefaultFilter("nearest", "nearest")
 end
 
 
@@ -155,7 +167,6 @@ function love.update(dt)
             Ball.y = Ball.y + RandomBall * dt
     end
      
-    print(RandomBall)
     BallGo(Move)
     if CheckCollisionBall2(Player2, Ball) then
         Move = 0
@@ -181,29 +192,19 @@ function love.update(dt)
 end
 
 function love.draw()
-    if player.CheckCollisionBall1(Player1, Ball) then
-        --If there is collision, draw the rectangles filled
-        Mode1 = "line"
-    else
-        --else, draw the rectangles as a line
-        Mode1 = "fill"
-    end
-    if CheckCollisionBall2(Player2, Ball) then
-        --If there is collision, draw the rectangles filled
-        Mode2 = "line"
-    else
-        --else, draw the rectangles as a line
-        Mode2 = "fill"
-    end
+    push:start()
 
-    love.graphics.print("Covjecansto: "..HighScore,380, 15)
-    love.graphics.print("Roboti: "..0,380, 567)
-    love.graphics.rectangle(Mode1, Player1.x, Player1.y, Player1.width, Player1.height)
-    love.graphics.rectangle('fill', OutofBoundsLeft.x, OutofBoundsLeft.y, OutofBoundsLeft.width, OutofBoundsLeft.height)
+    r, g, b = love.math.colorFromBytes(255, 0, 0)
+    love.graphics.setBackgroundColor(r, g, b)
+
+
+    love.graphics.draw(Player1.playerImg, Player1.x, Player1.y)
+    love.graphics.draw(Player2.enemyImg, Player2.x, Player2.y)
+    love.graphics.draw(Ball.ballImg, Ball.x, Ball.y)
     love.graphics.rectangle('fill', OutofBoundsRight.x, OutofBoundsRight.y, OutofBoundsRight.width, OutofBoundsRight.height)
-    love.graphics.rectangle(Mode2, Player2.x, Player2.y, Player2.width, Player2.height)
-    love.graphics.rectangle('fill', Ball.x, Ball.y, Ball.width, Ball.height)
+    love.graphics.setColor(love.math.colorFromBytes(140, 140, 140))
     wall.draw()
     
+    push:finish()
 end
 
