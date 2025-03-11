@@ -8,7 +8,7 @@ ball = require("ball")
 enemy = require("enemy")
 gameStateEnd = require("gameStateEnd")
 push = require("push")
-
+moonshine = require ('moonshine')
 function love.resize(w, h)
     push:resize(w, h)
 end
@@ -21,11 +21,19 @@ push:setupScreen(gameWidth, gameHeight, windowWidth, windowHeight, {fullscreen =
 
 function love.load()
     math.randomseed(os.time())
+    love.window.setVSync( -1 )
+    font = love.graphics.newFont( 'Fonts/slkscre.ttf', 48 )
+    love.graphics.setFont(font, 48)
+
+    effect = moonshine(moonshine.effects.filmgrain)
+    effect.filmgrain.opacity = 0.1
+    effect.filmgrain.size = 0.2
 
     RandomBall = 0
     Move = 2
     Speed = 800
-    HighScore=0
+    playerScore = 0
+    enemyScore = 0
 
     wall.load()
     player.load()
@@ -36,14 +44,17 @@ function love.load()
 end
 
 
-function CheckCollisionOutofBounds(OutofBoundsRight, OutofBoundsLeft, Ball)
+function CheckCollisionOutofBoundsLeft(OutofBoundsLeft, Ball)
     local wall_left = OutofBoundsLeft.x + OutofBoundsLeft.width
-    local wall_right = OutofBoundsRight.x
     local ball_left = Ball.x
-    local ball_right = Ball.x + Ball.width
 
     return wall_left>ball_left
-    or wall_right<ball_right
+end
+function CheckCollisionOutofBoundsRight(OutofBoundsRight, Ball)
+    local wall_right = OutofBoundsRight.x
+    local ball_right = Ball.x + Ball.width
+
+    return wall_right<ball_right
 end
 
 function WallBall(Ball,WallTop,WallBottom)
@@ -119,7 +130,6 @@ function love.update(dt)
     end
     function love.keyreleased(key)
         if Speed == 0 then
-            HighScore = 0
             Player1.y = 300
             Player2.y = 300
             if key == "space" then
@@ -178,32 +188,42 @@ function love.update(dt)
     if player.CheckCollisionBall1(Player1, Ball) then
         Move = 1
         Speed=Speed+10
-        HighScore=HighScore+1
         
         RandomBall = math.random(-300, 300)
     end
 
-    if CheckCollisionOutofBounds(OutofBoundsRight, OutofBoundsLeft, Ball) then
+    if CheckCollisionOutofBoundsLeft(OutofBoundsLeft, Ball) then
         Ball.y = 300
         Ball.x = 400
         Speed = 0
         RandomBall = 0
+        enemyScore =enemyScore+1
+    end
+    if CheckCollisionOutofBoundsRight(OutofBoundsRight, Ball) then
+        Ball.y = 300
+        Ball.x = 400
+        Speed = 0
+        RandomBall = 0
+        playerScore =playerScore+1
     end
 end
 
 function love.draw()
     push:start()
-
-    r, g, b = love.math.colorFromBytes(255, 0, 0)
+    
+    r, g, b = love.math.colorFromBytes(255, 157, 35)
     love.graphics.setBackgroundColor(r, g, b)
 
-
+    effect(function()
     love.graphics.draw(Player1.playerImg, Player1.x, Player1.y)
     love.graphics.draw(Player2.enemyImg, Player2.x, Player2.y)
     love.graphics.draw(Ball.ballImg, Ball.x, Ball.y)
     love.graphics.rectangle('fill', OutofBoundsRight.x, OutofBoundsRight.y, OutofBoundsRight.width, OutofBoundsRight.height)
-    love.graphics.setColor(love.math.colorFromBytes(140, 140, 140))
+    love.graphics.setColor(love.math.colorFromBytes(50, 50, 50))
+    love.graphics.print(playerScore ,300, 50)
+    love.graphics.print(enemyScore, 500, 50)
     wall.draw()
+    end)
     
     push:finish()
 end

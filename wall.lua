@@ -3,13 +3,13 @@ local wall = {}
 
 function wall.load()
     WallTop = {
-        x = 0,
+        x = -10,
         y = 0,
         width = 1000,
         height = 10
     }
     WallBottom = {
-        x = 0,
+        x = -10,
         y = 590,
         width = 1000,
         height = 10
