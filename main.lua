@@ -133,9 +133,9 @@ function love.update(dt)
             Player1.y = 300
             Player2.y = 300
             if key == "space" then
-               Move = 1
+               Move = 2
                Speed = 800
-               RandomBall = math.random(-300, 300)
+               RandomBall = 0
                Ball.y = Ball.y + RandomBall * dt
             end
         end
